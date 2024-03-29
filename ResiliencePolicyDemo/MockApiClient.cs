@@ -10,7 +10,7 @@ public class MockApiClient
         BaseAddress = new Uri("http://localhost:5001")
     };
 
-    public async Task<Data?> GetSurveyData(int id)
+    public async Task<SurveyData> GetSurveyData(int id)
     {
         var response = await _httpClient.GetAsync($"SurveyData/{id}");
        
@@ -23,7 +23,7 @@ public class MockApiClient
             throw new Exception($"Error retrieving data: {error?.Message}");
         }
         
-        var data = await response.Content.ReadFromJsonAsync<Data>();
+        var data = await response.Content.ReadFromJsonAsync<SurveyData>();
         
         return data;
     }

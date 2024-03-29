@@ -1,5 +1,3 @@
-using Polly.Retry;
-
 namespace ResiliencePolicyDemo;
 
 public static class Scenarios
@@ -13,7 +11,7 @@ public static class Scenarios
     
     
 
-    public static async Task Retry_NeverSucceed()
+    public static async Task SingleFailure()
     {    
         // ID 1000 will always return status code 500 from Mock API
         await AppLogic.ProcessData(1000);
@@ -21,7 +19,7 @@ public static class Scenarios
     
     
     
-    public static async Task Retry_IntermittentSucceed()
+    public static async Task IntermittentFailures()
     {    
         // ID 3000 will return status code 500 from Mock API 2/3 of the time
 
@@ -47,11 +45,14 @@ public static class Scenarios
         Console.WriteLine("\n(1) Pausing for 6s");
         await Task.Delay(6000);
         
-        // Request fails, triggering circuit breaker to open again
-        await AppLogic.ProcessData(1000);
+        // Requests fails, triggering circuit breaker to open again
+        for (var i = 0; i < 7; i++)
+        {
+            await AppLogic.ProcessData(1000);
+        }
 
         // Successful requests fail automatically because circuit breaker is triggered
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 3; i++)
         {
             await AppLogic.ProcessData(123);
         }
@@ -61,9 +62,15 @@ public static class Scenarios
         await Task.Delay(6000);
 
         // Circuit breaker closes, requests are successful
-        for (var i = 0; i < 10; i++)
+        for (var i = 0; i < 7; i++)
         {
             await AppLogic.ProcessData(123);
+        }
+        
+        // Circuit breaker still closed, requests still processed
+        for (var i = 0; i < 3; i++)
+        {
+            await AppLogic.ProcessData(1000);
         }
     }
     

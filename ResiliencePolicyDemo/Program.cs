@@ -2,9 +2,9 @@
 
 await Scenarios.Successful();
 
-// await Scenarios.Retry_NeverSucceed();
+// await Scenarios.SingleFailure();
 
-// await Scenarios.Retry_IntermittentSucceed();
+// await Scenarios.IntermittentFailures();
 
 // await Scenarios.CircuitBreaker();
 

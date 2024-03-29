@@ -18,6 +18,11 @@ public class SurveyDataController : ControllerBase
                 Message = "Something went wrong"
             };
         }
+        
+        if (id == 2000)
+        {
+            Thread.Sleep(10000);
+        }
 
         if (id == 3000)
         {
@@ -31,16 +36,11 @@ public class SurveyDataController : ControllerBase
                 };
             }
         }
-        
-        if (id == 2000)
-        {
-            Thread.Sleep(10000);
-        }
 
         return new Data
         {
             SurveyId = id,
-            ResponseCount = new Random().Next(5000)
+            ResponseCount = 1234
         };
     }
 }
