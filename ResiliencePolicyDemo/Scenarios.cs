@@ -30,6 +30,14 @@ public static class Scenarios
     }
     
     
+    
+    public static async Task Timeout()
+    {
+        // ID 2000 will always take 10s to process
+        await AppLogic.ProcessData(2000);
+    }
+    
+    
 
     public static async Task CircuitBreaker()
     {
@@ -72,14 +80,6 @@ public static class Scenarios
         {
             await AppLogic.ProcessData(1000);
         }
-    }
-    
-    
-
-    public static async Task Timeout()
-    {
-        // ID 2000 will always take 10s to process
-        await AppLogic.ProcessData(2000);
     }
     
 }

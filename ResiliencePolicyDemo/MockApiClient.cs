@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Http.Json;
 using Polly;
 
@@ -29,15 +30,16 @@ public class MockApiClient
     }
     
     
-    // ********************************************************
-    
+    # region ResiliencePolicy
     
     private readonly AsyncPolicy<HttpResponseMessage> _simpleRetryPolicy =
         Policy
-            .HandleResult<HttpResponseMessage>(res => !res.IsSuccessStatusCode)
+            .HandleResult<HttpResponseMessage>(res => res.StatusCode == HttpStatusCode.InternalServerError)
             .WaitAndRetryAsync(5, retryAttemptNum =>
             {
                 Console.WriteLine($"RetryAttemptNum {retryAttemptNum}");
                 return TimeSpan.FromMilliseconds(100);
             });
+    
+    #endregion
 }

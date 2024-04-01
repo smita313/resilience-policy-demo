@@ -6,6 +6,6 @@ await Scenarios.Successful();
 
 // await Scenarios.IntermittentFailures();
 
-// await Scenarios.CircuitBreaker();
-
 // await Scenarios.Timeout();
+
+// await Scenarios.CircuitBreaker();

@@ -11,12 +11,12 @@ public class ApplicationLogic
     {
         try
         {
-            var data = await  _mockApiClient.GetSurveyData(id);
+            var data = await _mockApiClient.GetSurveyData(id);
             
             // Do something with data
             
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine($"Data for Survey ID {data.SurveyId} was processed successfully. Response Count: {data.ResponseCount}");
+            Console.WriteLine($"Data for Survey ID {data.SurveyId} was processed successfully.");
         }
         catch (Exception ex)
         {
@@ -26,10 +26,9 @@ public class ApplicationLogic
         
         Console.ResetColor();
     }
-    
-    
-    
-    // ***************************************************************************
+
+
+    #region ResiliencePolicies
     
     
     private readonly AsyncPolicy _simpleRetryPolicy =
@@ -45,6 +44,12 @@ public class ApplicationLogic
             .Handle<Exception>()
             .WaitAndRetryAsync(5,
                 retryAttemptNum => TimeSpan.FromSeconds(Math.Pow(2, retryAttemptNum - 1)));
+    
+    
+    
+    
+    private readonly AsyncPolicy _timeoutPolicy =
+        Policy.TimeoutAsync(2, TimeoutStrategy.Pessimistic);
 
     
     
@@ -53,11 +58,8 @@ public class ApplicationLogic
         Policy
             .Handle<Exception>()
             .CircuitBreakerAsync(5, TimeSpan.FromSeconds(5));
-
     
     
-    
-    private readonly AsyncPolicy _timeoutPolicy =
-        Policy.TimeoutAsync(2, TimeoutStrategy.Pessimistic);
+    #endregion
     
 }

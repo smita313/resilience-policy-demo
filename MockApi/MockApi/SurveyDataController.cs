@@ -26,7 +26,7 @@ public class SurveyDataController : ControllerBase
 
         if (id == 3000)
         {
-            var rn = new Random().Next(100);
+            var rn = new Random().Next();
             if (rn % 3 != 0)
             {
                 Response.StatusCode = (int)HttpStatusCode.InternalServerError;
